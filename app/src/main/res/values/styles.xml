@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base style for all your calculator buttons -->
+    <style name="CalculatorButtonBase" parent="Widget.MaterialComponents.Button">
+        <!-- point at your rounded‑corner shape drawable -->
+        <item name="android:background">@drawable/btn_calculator</item>
+        <!-- default text color -->
+        <item name="android:textColor">@color/white</item>
+        <!-- you can also set default textSize, padding, etc. -->
+    </style>
+</resources>

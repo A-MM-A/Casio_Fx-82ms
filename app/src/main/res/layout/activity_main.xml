@@ -1,0 +1,1343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#D3D1D1"
+    android:padding="8dp">
+
+
+    <!-- Display borders -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_top_display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.04" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_bottom_display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.25" />
+
+
+    <!-- Button borders -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_top_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.30" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_bottom_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.98" />
+
+
+    <!-- 1) Display -->
+
+    <LinearLayout
+        android:id="@+id/display"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#A0A088"
+        android:orientation="vertical"
+        android:padding="5dp"
+        app:layout_constraintBottom_toTopOf="@id/guide_bottom_display"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guide_top_display">
+
+        <!-- First Line: Mode/Status Indicators (15%) -->
+        <LinearLayout
+            android:id="@+id/display_line1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="15"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="4dp"
+            android:weightSum="7">
+
+
+            <!-- fx‑82MS Indicators -->
+            <TextView
+                android:id="@+id/IndicatorTvShift"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/_TvShift"
+                android:textColor="#121A1C"
+                android:textSize="15sp"
+                android:visibility="gone"
+                tools:ignore="NestedWeights" />
+
+            <TextView
+                android:id="@+id/IndicatorTvAlpha"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/_TvAlpha"
+                android:textColor="#121A1C"
+                android:textSize="15sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/IndicatorTvHyp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/_TvHyp"
+                android:textColor="#121A1C"
+                android:textSize="15sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/IndicatorTvStat"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/_TvStat"
+                android:textColor="#121A1C"
+                android:textSize="15sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/IndicatorTvProb"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/_TvProb"
+                android:textColor="#121A1C"
+                android:textSize="15sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/IndicatorTvM"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/_TvM"
+                android:textColor="#121A1C"
+                android:textSize="15sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/IndicatorTvDegree"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/_TvDegree"
+                android:textColor="#121A1C"
+                android:textSize="15sp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <!-- Second Line: User Input (35%) -->
+        <LinearLayout
+            android:id="@+id/display_line2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="40"
+            android:gravity="end|center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="0dp">
+
+
+            <TextView
+                android:id="@+id/InputTv_arrow_left"
+                android:layout_width="20dp"
+                android:layout_height="25dp"
+                android:fontFamily="@font/digital7"
+                android:gravity="center_vertical"
+                android:text="@string/_arrow_left"
+                android:textColor="#121A1C"
+                android:textSize="20sp"
+                android:translationX="1dp"
+                android:translationY="1dp" />
+
+
+            <TextView
+                android:id="@+id/InputTv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                android:ellipsize="none"
+                android:fontFamily="@font/digital7"
+
+                android:gravity="start|center_vertical"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:text="000000000000000000"
+
+                android:textAlignment="viewStart"
+                android:textColor="#121A1C"
+                android:textSize="50sp"
+                tools:ignore="NestedWeights" />
+
+            <TextView
+                android:id="@+id/InputTv_arrow_right"
+                android:layout_width="20dp"
+                android:layout_height="25dp"
+                android:fontFamily="@font/digital7"
+                android:gravity="center_vertical"
+                android:text="@string/_arrow_right"
+                android:textColor="#121A1C"
+                android:textSize="20sp"
+                android:translationX="1dp"
+                android:translationY="1dp" />
+
+
+        </LinearLayout>
+
+        <!-- Third Line: Result + Exponent (50%) -->
+        <LinearLayout
+            android:id="@+id/display_line3"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="50"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp">
+
+            <!-- Main Result (fills left) -->
+
+            <!-- Static "×10" prefix -->
+            <TextView
+                android:id="@+id/ResultTv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/digital7"
+                android:gravity="end|center_horizontal"
+                android:text=""
+                android:textColor="#121A1C"
+                android:textSize="60sp"
+                tools:ignore="NestedWeights" />
+
+            <TextView
+                android:id="@+id/ResultTv_x10"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:fontFamily="@font/digital7"
+                android:gravity="center_vertical"
+                android:text="@string/_x10"
+                android:textColor="#121A1C"
+                android:textSize="20sp"
+                android:translationX="10dp"
+                android:translationY="14dp" />
+
+
+            <!-- Dynamic exponent value -->
+            <TextView
+                android:id="@+id/ResultTv_x10_exp"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/digital7"
+                android:gravity="center_vertical"
+                android:text=""
+                android:textColor="#121A1C"
+                android:textSize="20sp"
+                android:translationX="-10px"
+                android:translationY="-10px" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <!-- 2) Keypad Grid -->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/keypad_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/guide_bottom_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guide_top_button"
+        tools:ignore="MissingConstraints">
+
+        <!-- Split layers at 20% and 50% -->
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guide_layer1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.20" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guide_layer2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.50" />
+
+
+
+        <!-- Layer 1: custom 3×1 with 2×2 blocks + D‑pad -->
+
+        <LinearLayout
+            android:id="@+id/grid1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/guide_layer1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+            <!-- Column 1 : 2×2 block -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:weightSum="2"
+                tools:ignore="NestedWeights">
+
+                <!-- Row 1 of column 1 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    tools:ignore="NestedWeights">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_shift"
+                        android:layout_width="15dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="1dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_calculator"
+                        android:backgroundTint="#958F8F"
+                        android:backgroundTintMode="src_in"
+                        android:maxLines="1"
+                        android:text="@string/_shift"
+                        android:textColor="#FFEB3B"
+                        android:textSize="14sp"
+                        tools:ignore="NestedWeights" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_alpha"
+                        android:layout_width="15dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_calculator"
+                        android:backgroundTint="#958F8F"
+                        android:backgroundTintMode="src_in"
+                        android:maxLines="1"
+                        android:text="@string/_alpha"
+                        android:textColor="#ED9EB9"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <!-- Row 2 of column 1 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_inverse"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_calculator"
+                        android:backgroundTint="#C2525150"
+                        android:backgroundTintMode="src_in"
+                        android:maxLines="1"
+                        android:text="@string/_inverse"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_ncr"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_calculator"
+                        android:backgroundTint="#C2525150"
+                        android:backgroundTintMode="src_in"
+                        android:maxLines="1"
+                        android:text="@string/_ncr"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <!-- Column 2 : D‑pad -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:weightSum="3">
+
+                <!-- Up arrow -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <!-- left spacer -->
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        tools:ignore="NestedWeights" />
+
+                    <!-- actual up button, only middle third -->
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_up"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_calculator"
+                        android:backgroundTint="#958F8F"
+                        android:backgroundTintMode="src_in"
+                        android:maxLines="1"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+
+                    <!-- right spacer -->
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <!-- Left/Right arrows -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_left"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_calculator"
+                        android:backgroundTint="#958F8F"
+                        android:backgroundTintMode="src_in"
+                        android:maxLines="1"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        tools:ignore="NestedWeights" />
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_right"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_calculator"
+                        android:backgroundTint="#958F8F"
+                        android:backgroundTintMode="src_in"
+                        android:maxLines="1"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+                <!-- Down arrow -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <!-- left spacer -->
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        tools:ignore="NestedWeights" />
+
+                    <!-- actual down button -->
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_down"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_calculator"
+                        android:backgroundTint="#958F8F"
+                        android:backgroundTintMode="src_in"
+                        android:maxLines="1"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+
+                    <!-- right spacer -->
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <!-- Column 3 : 2×2 block -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:weightSum="2">
+
+                <!-- Row 1 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_mode"
+                        android:layout_width="15dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="1dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_calculator"
+                        android:backgroundTint="#958F8F"
+                        android:backgroundTintMode="src_in"
+                        android:maxLines="1"
+                        android:text="@string/_mode"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        tools:ignore="NestedWeights" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_on"
+                        android:layout_width="15dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_calculator"
+                        android:backgroundTint="#958F8F"
+                        android:backgroundTintMode="src_in"
+                        android:maxLines="1"
+                        android:text="@string/_on"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <!-- Row 2  -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_pol"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_calculator"
+                        android:backgroundTint="#C2525150"
+                        android:backgroundTintMode="src_in"
+                        android:maxLines="1"
+                        android:text="@string/_pol"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        tools:ignore="NestedWeights" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_cube"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_calculator"
+                        android:backgroundTint="#C2525150"
+                        android:backgroundTintMode="src_in"
+                        android:maxLines="1"
+                        android:text="@string/_cube"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <!-- Flow for Layer 2 (18 buttons) -->
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/flow_layer2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:constraint_referenced_ids="
+                    btn_fraction,btn_sqrt,btn_square,btn_power,btn_log,btn_ln,
+                    btn_negative,btn_degree,btn_hyp,btn_sin,btn_cos,btn_tan,
+                    btn_rcl,btn_eng,btn_open_bracket,btn_close_bracket,btn_comma,btn_mplus"
+            app:flow_horizontalStyle="spread"
+            app:flow_maxElementsWrap="6"
+            app:flow_wrapMode="chain"
+            app:layout_constraintBottom_toTopOf="@id/guide_layer2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/guide_layer1"
+            tools:ignore="NotSibling" />
+
+        <!-- Flow for Layer 3 (20 buttons) -->
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/flow_layer3"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:constraint_referenced_ids="
+                    btn_7,btn_8,btn_9,btn_del,btn_ac,
+                    btn_4,btn_5,btn_6,btn_multiply,btn_divide,
+                    btn_1,btn_2,btn_3,btn_add,btn_minus,
+                    btn_0,btn_dot,btn_exp,btn_ans,btn_equal"
+            app:flow_horizontalStyle="spread"
+            app:flow_maxElementsWrap="5"
+            app:flow_verticalStyle="spread"
+            app:flow_wrapMode="chain"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/guide_layer2"
+            tools:ignore="NotSibling" />
+
+
+        <!-- Grid 1: 1 row × 3 columns (20% height) -->
+
+
+<!--        &lt;!&ndash; Column 1 : 2×2 block &ndash;&gt;-->
+<!--        &lt;!&ndash; Row 1 of column 1 &ndash;&gt;-->
+
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/btn_shift"-->
+<!--            android:layout_width="15dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginEnd="1dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@drawable/btn_calculator"-->
+<!--            android:backgroundTint="#958F8F"-->
+<!--            android:backgroundTintMode="src_in"-->
+<!--            android:maxLines="1"-->
+<!--            android:text="@string/_shift"-->
+<!--            android:textColor="#FFEB3B"-->
+<!--            android:textSize="14sp"-->
+<!--            tools:ignore="NestedWeights" />-->
+
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/btn_alpha"-->
+<!--            android:layout_width="15dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@drawable/btn_calculator"-->
+<!--            android:backgroundTint="#958F8F"-->
+<!--            android:backgroundTintMode="src_in"-->
+<!--            android:maxLines="1"-->
+<!--            android:text="@string/_alpha"-->
+<!--            android:textColor="#ED9EB9"-->
+<!--            android:textSize="14sp" />-->
+
+<!--        &lt;!&ndash; Row 2 of column 1 &ndash;&gt;-->
+
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/btn_inverse"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_margin="5dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@drawable/btn_calculator"-->
+<!--            android:backgroundTint="#C2525150"-->
+<!--            android:backgroundTintMode="src_in"-->
+<!--            android:maxLines="1"-->
+<!--            android:text="@string/_inverse"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="20sp" />-->
+
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/btn_ncr"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_margin="5dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@drawable/btn_calculator"-->
+<!--            android:backgroundTint="#C2525150"-->
+<!--            android:backgroundTintMode="src_in"-->
+<!--            android:maxLines="1"-->
+<!--            android:text="@string/_ncr"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="16sp" />-->
+
+
+<!--        &lt;!&ndash; Column 2 : D‑pad &ndash;&gt;-->
+<!--        &lt;!&ndash; Up arrow &ndash;&gt;-->
+
+<!--        <Space-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="1"-->
+<!--            tools:ignore="NestedWeights" />-->
+
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/btn_up"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@drawable/btn_calculator"-->
+<!--            android:backgroundTint="#958F8F"-->
+<!--            android:backgroundTintMode="src_in"-->
+<!--            android:maxLines="1"-->
+<!--            android:text=""-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="20sp" />-->
+
+<!--        <Space-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="1" />-->
+
+
+<!--        &lt;!&ndash; Left/Right arrows &ndash;&gt;-->
+
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/btn_left"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@drawable/btn_calculator"-->
+<!--            android:backgroundTint="#958F8F"-->
+<!--            android:backgroundTintMode="src_in"-->
+<!--            android:maxLines="1"-->
+<!--            android:text=""-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="20sp"-->
+<!--            tools:ignore="NestedWeights" />-->
+
+<!--        <Space-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1" />-->
+
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/btn_right"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@drawable/btn_calculator"-->
+<!--            android:backgroundTint="#958F8F"-->
+<!--            android:backgroundTintMode="src_in"-->
+<!--            android:maxLines="1"-->
+<!--            android:text=""-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="20sp" />-->
+
+
+<!--        &lt;!&ndash; Down arrow &ndash;&gt;-->
+
+<!--        <Space-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="1"-->
+<!--            tools:ignore="NestedWeights" />-->
+
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/btn_down"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@drawable/btn_calculator"-->
+<!--            android:backgroundTint="#958F8F"-->
+<!--            android:backgroundTintMode="src_in"-->
+<!--            android:maxLines="1"-->
+<!--            android:text=""-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="20sp" />-->
+
+<!--        <Space-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="1" />-->
+
+
+
+<!--        &lt;!&ndash; Column 3 : 2×2 block &ndash;&gt;-->
+<!--        &lt;!&ndash; Row 1 &ndash;&gt;-->
+
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/btn_mode"-->
+<!--            android:layout_width="15dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginEnd="1dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@drawable/btn_calculator"-->
+<!--            android:backgroundTint="#958F8F"-->
+<!--            android:backgroundTintMode="src_in"-->
+<!--            android:maxLines="1"-->
+<!--            android:text="@string/_mode"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="14sp"-->
+<!--            tools:ignore="NestedWeights" />-->
+
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/btn_on"-->
+<!--            android:layout_width="15dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@drawable/btn_calculator"-->
+<!--            android:backgroundTint="#958F8F"-->
+<!--            android:backgroundTintMode="src_in"-->
+<!--            android:maxLines="1"-->
+<!--            android:text="@string/_on"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="14sp" />-->
+
+
+<!--        &lt;!&ndash; Row 2  &ndash;&gt;-->
+
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/btn_pol"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_margin="5dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@drawable/btn_calculator"-->
+<!--            android:backgroundTint="#C2525150"-->
+<!--            android:backgroundTintMode="src_in"-->
+<!--            android:maxLines="1"-->
+<!--            android:text="@string/_pol"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="16sp"-->
+<!--            tools:ignore="NestedWeights" />-->
+
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/btn_cube"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_margin="5dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@drawable/btn_calculator"-->
+<!--            android:backgroundTint="#C2525150"-->
+<!--            android:backgroundTintMode="src_in"-->
+<!--            android:maxLines="1"-->
+<!--            android:text="@string/_cube"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="20sp" />-->
+
+
+
+
+
+    <!-- Grid 2: 3 rows × 6 columns (18 buttons) -->
+
+    <!-- Row 1 -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_fraction"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#C2525150"
+        android:backgroundTintMode="src_in"
+        android:maxLines="1"
+        android:text="@string/_fraction"
+        android:textColor="@color/white"
+        android:textSize="12sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_sqrt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#C2525150"
+        android:backgroundTintMode="src_in"
+        android:maxLines="1"
+        android:text="@string/_sqrt"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_square"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#C2525150"
+        android:backgroundTintMode="src_in"
+        android:maxLines="1"
+        android:text="@string/_square"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_power"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#C2525150"
+        android:backgroundTintMode="src_in"
+        android:maxLines="1"
+        android:text="@string/_power"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_log"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#C2525150"
+        android:backgroundTintMode="src_in"
+        android:maxLines="1"
+        android:text="@string/_log"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_ln"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#C2525150"
+        android:backgroundTintMode="src_in"
+        android:maxLines="1"
+        android:text="@string/_ln"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <!-- Row 2 -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_negative"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#C2525150"
+        android:backgroundTintMode="src_in"
+        android:maxLines="1"
+        android:text="@string/_negative"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_degree"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#C2525150"
+        android:backgroundTintMode="src_in"
+        android:maxLines="1"
+        android:text="@string/_degree"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_hyp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#C2525150"
+        android:backgroundTintMode="src_in"
+        android:maxLines="1"
+        android:text="@string/_hyp"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_sin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#C2525150"
+        android:backgroundTintMode="src_in"
+        android:maxLines="1"
+        android:text="@string/_sin"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_cos"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#C2525150"
+        android:backgroundTintMode="src_in"
+        android:maxLines="1"
+        android:text="@string/_cos"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_tan"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#C2525150"
+        android:backgroundTintMode="src_in"
+        android:maxLines="1"
+        android:text="@string/_tan"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <!-- Row 3 -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_rcl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#C2525150"
+        android:backgroundTintMode="src_in"
+        android:maxLines="1"
+        android:text="@string/_rcl"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_eng"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#C2525150"
+        android:backgroundTintMode="src_in"
+        android:maxLines="1"
+        android:text="@string/_eng"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_open_bracket"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#C2525150"
+        android:backgroundTintMode="src_in"
+        android:maxLines="1"
+        android:text="@string/_open_bracket"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_close_bracket"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#C2525150"
+        android:backgroundTintMode="src_in"
+        android:maxLines="1"
+        android:text="@string/_close_bracket"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_comma"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#C2525150"
+        android:backgroundTintMode="src_in"
+        android:maxLines="1"
+        android:text="@string/_comma"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_mplus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#C2525150"
+        android:backgroundTintMode="src_in"
+        android:maxLines="1"
+        android:text="@string/_mplus"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+
+    <!-- Grid 3: 4 rows × 5 columns (20 buttons) -->
+
+    <!-- Row 1 -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_7"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#E0A6A1A1"
+        android:backgroundTintMode="src_in"
+        android:text="@string/_7"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_8"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#E0A6A1A1"
+        android:backgroundTintMode="src_in"
+        android:text="@string/_8"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_9"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#E0A6A1A1"
+        android:backgroundTintMode="src_in"
+        android:text="@string/_9"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_del"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#E7F01CAE"
+        android:backgroundTintMode="src_in"
+        android:text="@string/_del"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_ac"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#E7F01CAE"
+        android:backgroundTintMode="src_in"
+        android:text="@string/_ac"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <!-- Row 2 -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#E0A6A1A1"
+        android:backgroundTintMode="src_in"
+        android:text="@string/_4"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_5"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#E0A6A1A1"
+        android:backgroundTintMode="src_in"
+        android:text="@string/_5"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_6"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#E0A6A1A1"
+        android:backgroundTintMode="src_in"
+        android:text="@string/_6"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_multiply"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#E48A7171"
+        android:backgroundTintMode="src_in"
+        android:text="@string/_multiply"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        tools:ignore="TooManyViews" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_divide"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#E48A7171"
+        android:backgroundTintMode="src_in"
+        android:text="@string/_divide"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <!-- Row 3 -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#E0A6A1A1"
+        android:backgroundTintMode="src_in"
+        android:text="@string/_1"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#E0A6A1A1"
+        android:backgroundTintMode="src_in"
+        android:text="@string/_2"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#E0A6A1A1"
+        android:backgroundTintMode="src_in"
+        android:text="@string/_3"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_add"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#E48A7171"
+        android:backgroundTintMode="src_in"
+        android:text="@string/_add"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        tools:ignore="TooManyViews" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_minus"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#E48A7171"
+        android:backgroundTintMode="src_in"
+        android:text="@string/_minus"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <!-- Row 4 -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_0"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#E0A6A1A1"
+        android:backgroundTintMode="src_in"
+        android:text="@string/_0"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_dot"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#E0A6A1A1"
+        android:backgroundTintMode="src_in"
+        android:text="@string/_dot"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_exp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#E0A6A1A1"
+        android:backgroundTintMode="src_in"
+        android:text="@string/_exp"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_ans"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#A1525150"
+        android:backgroundTintMode="src_in"
+        android:text="@string/_ans"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_equal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_calculator"
+        android:backgroundTint="#A1525150"
+        android:backgroundTintMode="src_in"
+        android:text="@string/_equal"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
