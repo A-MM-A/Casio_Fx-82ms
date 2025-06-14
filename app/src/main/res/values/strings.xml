@@ -60,4 +60,5 @@
     <string name="_TvHyp">HYP</string>
     <string name="_TvAlpha">ALPHA</string>
     <string name="_TvShift">SHIFT</string>
+    <string name="dot">.</string>
 </resources>

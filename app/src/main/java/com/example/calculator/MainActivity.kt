@@ -2,6 +2,7 @@ package com.example.calculator
 
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,9 @@ import java.math.BigDecimal
 import kotlin.math.roundToInt
 import java.math.MathContext
 import java.math.RoundingMode
+import androidx.core.content.edit
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 
 
 class MainActivity : AppCompatActivity() {
@@ -30,6 +34,14 @@ class MainActivity : AppCompatActivity() {
     private var lastRawResult = BigDecimal.ZERO
     private var resultFormat = 0
     private var justInserted = false
+    private var isViewingHistory = false
+    private var isDarkMode = false
+
+    // History: list of (expression, result)
+    private val history = mutableListOf<Pair<String, String>>()
+
+    // Current position in history navigation; -1 = not navigating
+    private var historyPos = -1
 
 
     private var showCursor = true
@@ -67,15 +79,53 @@ class MainActivity : AppCompatActivity() {
 
             engine.shiftOn = false
             justEvaluated = false
+            isViewingHistory = false
             updateShiftStateUI()
+
             refreshInput()
+
+            // restart the blinking cursor
+            cursorHandler.removeCallbacks(cursorRunnable)
+            showCursor = true
+            cursorHandler.post(cursorRunnable)
+
+            history.clear()
+            historyPos = -1
+            getSharedPreferences("calc_prefs", MODE_PRIVATE)
+                .edit {
+                    remove("history_json")
+                }
         }
+
+
         binding.btnMode.setOnClickListener {
+            historyPos = -1
+
+            if (engine.shiftOn) {
+                engine.shiftOn = false
+                updateShiftStateUI()
+                binding.IndicatorTvShift.visibility = View.GONE
+            }
+
             engine.isDegree = !engine.isDegree
             binding.IndicatorTvDegree.visibility =
                 if (engine.isDegree) View.INVISIBLE else View.VISIBLE
 
+            // Define colors
+            val colorFrom = if (isDarkMode) "#0F0E0E".toColorInt() else "#D3D1D1".toColorInt()
+            val colorTo = if (isDarkMode) "#D3D1D1".toColorInt() else "#0F0E0E".toColorInt()
+
+            // Animate background color
+            val colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), colorFrom, colorTo)
+            colorAnimation.duration = 500 // duration in milliseconds
+            colorAnimation.addUpdateListener { animator ->
+                binding.root.setBackgroundColor(animator.animatedValue as Int)
+            }
+            colorAnimation.start()
+
+            isDarkMode = !isDarkMode
         }
+
 
         // 2) Number buttons
         listOf(
@@ -94,13 +144,13 @@ class MainActivity : AppCompatActivity() {
             binding.btnCloseBracket to " )"
         ).forEach { (btn, str) ->
             btn.setOnClickListener {
+                historyPos = -1
                 if (engine.shiftOn) {
                     engine.shiftOn = false
                     updateShiftStateUI()
                     binding.IndicatorTvShift.visibility = View.GONE
                 }
-                handlePostEval(str)
-                { insertChar(str) }
+                handlePostEval(str) { insertChar(str) }
             }
         }
 
@@ -150,8 +200,18 @@ class MainActivity : AppCompatActivity() {
             binding.IndicatorTvShift.visibility = View.GONE
             engine.shiftOn = false
             justEvaluated = false
+            isViewingHistory = false
             updateShiftStateUI()
+
+            // refresh the display
             refreshInput()
+
+            // restart the blinking cursor
+            cursorHandler.removeCallbacks(cursorRunnable)
+            showCursor = true
+            cursorHandler.post(cursorRunnable)
+
+
         }
 
         // 4) Operators
@@ -168,72 +228,80 @@ class MainActivity : AppCompatActivity() {
             binding.btnInverse to "⁻¹"
         ).forEach { (btn, op) ->
             btn.setOnClickListener {
+                historyPos = -1
                 if (engine.shiftOn) {
                     engine.shiftOn = false
                     updateShiftStateUI()
                     binding.IndicatorTvShift.visibility = View.GONE
                 }
-                handlePostEval(op)
-                { insertChar(op) }
+                handlePostEval(op) { insertChar(op) }
             }
         }
 
 
         // 5) Functions
         binding.btnSin.setOnClickListener {
-            handlePostEval("sin ")
-            { handleShiftableFunction("sin ", "sin⁻¹ ") }
+            historyPos = -1
+            handlePostEval("sin ") { handleShiftableFunction("sin ", "sin⁻¹ ") }
         }
         binding.btnCos.setOnClickListener {
-            handlePostEval("cos ")
-            { handleShiftableFunction("cos ", "cos⁻¹ ") }
+            historyPos = -1
+            handlePostEval("cos ") { handleShiftableFunction("cos ", "cos⁻¹ ") }
         }
         binding.btnTan.setOnClickListener {
-            handlePostEval("tan ")
-            { handleShiftableFunction("tan ", "tan⁻¹ ") }
+            historyPos = -1
+            handlePostEval("tan ") { handleShiftableFunction("tan ", "tan⁻¹ ") }
         }
         binding.btnLog.setOnClickListener {
-            handlePostEval("log ")
-            { handleShiftableFunction("log ", "₁₀ ") }
+            historyPos = -1
+            handlePostEval("log ") { insertChar("log ") }
         }
 
 
         // 6) Shift toggle
         binding.btnShift.setOnClickListener {
+            historyPos = -1
+            // if we just pressed “=”, clear the old input so shift‑sin starts fresh
+            if (justEvaluated || isViewingHistory) {
+                inputText = ""
+                cursorPos = 0
+                windowStart = 0
+                justEvaluated = false
+            }
             engine.toggleShift()
             binding.IndicatorTvShift.visibility = if (engine.shiftOn) View.VISIBLE else View.GONE
 
+            refreshInput()
             updateShiftStateUI()
         }
 
 
         //  Ans button
         binding.btnAns.setOnClickListener {
+            historyPos = -1
             if (engine.shiftOn) {
                 engine.shiftOn = false
                 updateShiftStateUI()
                 binding.IndicatorTvShift.visibility = View.GONE
             }
-            handlePostEval("Ans ")
-            { insertChar("Ans ") }
+            handlePostEval("Ans ") { insertChar("Ans ") }
         }
 
 
         //  Equal button
         binding.btnEqual.setOnClickListener {
-            if (engine.shiftOn) {
-                engine.shiftOn = false
-                updateShiftStateUI()
-                binding.IndicatorTvShift.visibility = View.GONE
+            // if input ends with a function token (no argument), feed it Ans
+            Regex("(sin⁻¹|cos⁻¹|tan⁻¹|sin|cos|tan|log|ln)\\s*$").find(inputText)?.let {
+                inputText = inputText.trimEnd() + " Ans "
+                refreshInput()
             }
+
             try {
 
                 // Just before evaluate():
-                val evalString =
-                    inputText.replace(
-                        "Ans",
-                        engine.getLastAnswerValue().toPlainString()
-                    )
+                val evalString = inputText.replace(
+                    "Ans", engine.getLastAnswerValue().toPlainString()
+                )
 
 
                 // 1) push our visual input into the engine
@@ -252,6 +320,11 @@ class MainActivity : AppCompatActivity() {
 
                 binding.ResultTv.text = disp
 
+                // record into history (expression before Ans→value replacement)
+                history.add(inputText to disp)
+                // reset nav pointer
+                historyPos = -1
+
                 // 3) update lastAnswer inside engine (if you track it there)
                 engine.lastAnswer = result
 
@@ -259,10 +332,14 @@ class MainActivity : AppCompatActivity() {
                 resultFormat = 0
                 updateResultDisplay()
 
-                justEvaluated = true
 
                 // stop blinking
                 cursorHandler.removeCallbacks(cursorRunnable)
+                showCursor = false
+                refreshInput()
+
+                justEvaluated = true
+                isViewingHistory = false
 
             } catch (e: Exception) {
                 // prevents crash, shows error
@@ -273,69 +350,166 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        // 8) Memory Buttons
-//        binding.btnMplus.setOnClickListener {
-//            engine.memoryAdd()
-//            binding.IndicatorTvM.visibility = View.VISIBLE
-//        }
-//                binding.btnMminus.setOnClickListener {
-//                    engine.memorySubtract()
-//                    binding.IndicatorTvM.visibility = View.VISIBLE
-//                }
-//                binding.btnMr.setOnClickListener {
-//                    engine.memoryRecall(); refreshInput()
-//                }
-//                binding.btnMc.setOnClickListener {
-//                    engine.memoryClear()
-//                    binding.IndicatorTvM.visibility = View.INVISIBLE
-//                }
-
-
         // 9) Degree and fraction toggle
 
         binding.btnFraction.setOnClickListener {
+            historyPos = -1
             if (engine.shiftOn) {
                 engine.shiftOn = false
                 updateShiftStateUI()
                 binding.IndicatorTvShift.visibility = View.GONE
             }
-            handlePostEval("/")
-            { insertChar("/") }
+            handlePostEval("/") { insertChar("") }
         }
 
         binding.btnDegree.setOnClickListener {
+            historyPos = -1
             if (engine.shiftOn) {
                 engine.shiftOn = false
                 updateShiftStateUI()
                 binding.IndicatorTvShift.visibility = View.GONE
             }
-            handlePostEval("º")
-            { insertChar("º") }
+            handlePostEval("º") { insertChar("") }
         }
 
 
         // 10) History up/down (you’ll need to store past inputs in a list)
-        // TODO: implement engine.historyUp(), historyDown() and wire binding.btnUp/btnDown
+        binding.btnUp.setOnClickListener {
+
+            if (history.isEmpty()) return@setOnClickListener
+            // start navigation
+            historyPos = if (historyPos == -1) {
+                // first Up press → last entry
+                history.size - 1
+            } else {
+                // loop backward
+                (historyPos - 1 + history.size) % history.size
+            }
+            val (expr, res) = history[historyPos]
+            inputText = expr
+            cursorPos = expr.length
+            binding.ResultTv.text = res
+            justEvaluated = false
+            isViewingHistory = true
+            // stop and show cursor once
+            cursorHandler.removeCallbacks(cursorRunnable)
+            showCursor = false
+            refreshInput()
+
+        }
+        binding.btnDown.setOnClickListener {
+
+            if (history.isEmpty()) return@setOnClickListener
+            historyPos = if (historyPos == -1) {
+                // first Down press → first entry
+                0
+            } else {
+                // loop forward
+                (historyPos + 1) % history.size
+            }
+            val (expr, res) = history[historyPos]
+            inputText = expr
+            cursorPos = expr.length
+            binding.ResultTv.text = res
+            justEvaluated = false
+            isViewingHistory = true
+            cursorHandler.removeCallbacks(cursorRunnable)
+            showCursor = false
+            refreshInput()
+
+        }
 
 
         // 11) Left/Right arrows in input
         binding.btnLeft.setOnClickListener {
+            historyPos = -1
             if (engine.shiftOn) {
                 engine.shiftOn = false
                 updateShiftStateUI()
                 binding.IndicatorTvShift.visibility = View.GONE
             }
-            if (cursorPos > 0) cursorPos--
+
+
+            if (cursorPos > 0) {
+                // try to move one char left
+                var newPos = cursorPos - 1
+                // define tokens (with trailing space where appropriate)
+                val tokens = listOf(
+                    "sin⁻¹ ",
+                    "cos⁻¹ ",
+                    "tan⁻¹ ",
+                    "sin ",
+                    "cos ",
+                    "tan ",
+                    "log ",
+                    "Ans ",
+                    "ln ",
+                    "₁₀ ",
+                    "⁻¹",
+                    "( ",
+                    " )"
+                )
+                // check each token, longest first
+                for (tok in tokens.sortedByDescending { it.length }) {
+                    val start = newPos + 1 - tok.length
+                    if (start >= 0 && inputText.substring(start, newPos + 1) == tok) {
+                        // jump to before the token
+                        newPos = start
+                        break
+                    }
+                }
+                cursorPos = newPos
+            }
+
             refreshInput()
+
+            showCursor = true
+            cursorHandler.removeCallbacks(cursorRunnable)
+            cursorHandler.post(cursorRunnable)
         }
         binding.btnRight.setOnClickListener {
+            historyPos = -1
             if (engine.shiftOn) {
                 engine.shiftOn = false
                 updateShiftStateUI()
                 binding.IndicatorTvShift.visibility = View.GONE
             }
-            if (cursorPos < inputText.length) cursorPos++
+
+            if (cursorPos < inputText.length) {
+                // try to move one char right
+                var newPos = cursorPos + 1
+                // same tokens as left, match at cursor
+                val tokens = listOf(
+                    "sin⁻¹ ",
+                    "cos⁻¹ ",
+                    "tan⁻¹ ",
+                    "sin ",
+                    "cos ",
+                    "tan ",
+                    "log ",
+                    "Ans ",
+                    "ln ",
+                    "₁₀ ",
+                    "⁻¹",
+                    "( ",
+                    " )"
+                )
+                // check each token, longest first
+                for (tok in tokens.sortedByDescending { it.length }) {
+                    if (inputText.regionMatches(cursorPos, tok, 0, tok.length)) {
+                        newPos = cursorPos + tok.length
+                        break
+                    }
+                }
+                // clamp at end
+                cursorPos = min(newPos, inputText.length)
+            }
+
             refreshInput()
+
+            showCursor = true
+            cursorHandler.removeCallbacks(cursorRunnable)
+            cursorHandler.post(cursorRunnable)
         }
 
         // Start blinking cursor and initial draw
@@ -345,7 +519,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun handlePostEval(keyText: String, action: () -> Unit) {
-        if (justEvaluated) {
+        if (justEvaluated  || isViewingHistory) {
             when {
                 // a) Fraction or Degree toggles: only transform the result view
                 keyText == "/" || keyText == "º" -> {
@@ -473,9 +647,6 @@ class MainActivity : AppCompatActivity() {
             binding.btnTan.text = "tan⁻¹"
             binding.btnTan.setTextColor("#FFEB3B".toColorInt())
 
-            binding.btnLog.text = "10⨯"
-            binding.btnLog.setTextColor("#FFEB3B".toColorInt())
-
 
         } else {
             binding.btnSin.text = "sin"
@@ -487,20 +658,42 @@ class MainActivity : AppCompatActivity() {
             binding.btnTan.text = "tan"
             binding.btnTan.setTextColor("#FFFFFF".toColorInt())
 
-            binding.btnLog.text = "log"
-            binding.btnLog.setTextColor("#FFFFFF".toColorInt())
-
 
         }
     }
 
     private fun insertChar(str: String) {
         justInserted = true
-        if (cursorPos < inputText.length) {
-            inputText = inputText.replaceRange(cursorPos, cursorPos + 1, str)
-        } else {
-            inputText += str
+
+        // If at cursor there’s a multi‐char token, remove it entirely first:
+        val tokens = listOf(
+            "sin⁻¹ ", "cos⁻¹ ", "tan⁻¹ ",
+            "sin ", "cos ", "tan ",
+            "log ", "Ans ", "ln ",
+            "₁₀ ", "⁻¹", "( ", " )"
+        ).sortedByDescending { it.length }
+        for (tok in tokens) {
+            if (cursorPos + tok.length <= inputText.length
+                && inputText.regionMatches(cursorPos, tok, 0, tok.length)
+            ) {
+                // remove the entire token before inserting
+                inputText = inputText.removeRange(cursorPos, cursorPos + tok.length)
+                break
+            }
         }
+
+        // If cursor is before the end, replace the single character there
+        inputText = if (cursorPos < inputText.length) {
+            inputText.substring(0, cursorPos) +
+                    str +
+                    inputText.substring(cursorPos + 1)
+        } else {
+            // else append at end
+            inputText + str
+        }
+
+        // Move cursor past inserted/replaced text
+
         cursorPos = min(inputText.length, cursorPos + str.length)
         refreshInput()
     }
@@ -555,8 +748,7 @@ class MainActivity : AppCompatActivity() {
 
         // 7) Finally, set the text and arrows
         tv.text = disp
-        binding.InputTvArrowLeft.visibility =
-            if (windowStart > 0) View.VISIBLE else View.INVISIBLE
+        binding.InputTvArrowLeft.visibility = if (windowStart > 0) View.VISIBLE else View.INVISIBLE
         binding.InputTvArrowRight.visibility =
             if (windowEnd < inputText.length) View.VISIBLE else View.INVISIBLE
     }
@@ -565,5 +757,42 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         cursorHandler.removeCallbacks(cursorRunnable)
     }
+
+    override fun onPause() {
+        super.onPause()
+        // save history as a proper JSONArray
+        val prefs = getSharedPreferences("calc_prefs", MODE_PRIVATE)
+        val arr = org.json.JSONArray()
+        history.forEach { (expr, res) ->
+            val obj = org.json.JSONObject()
+            obj.put("expr", expr)
+            obj.put("res", res)
+            arr.put(obj)
+        }
+        prefs.edit()
+            .putString("history_json", arr.toString())
+            .apply()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // load history from JSONArray
+        val prefs = getSharedPreferences("calc_prefs", MODE_PRIVATE)
+        val json = prefs.getString("history_json", null) ?: return
+        try {
+            val arr = org.json.JSONArray(json)
+            history.clear()
+            for (i in 0 until arr.length()) {
+                val obj = arr.getJSONObject(i)
+                val expr = obj.getString("expr")
+                val res = obj.getString("res")
+                history += expr to res
+            }
+        } catch (e: org.json.JSONException) {
+            // corrupted or invalid: clear history
+            history.clear()
+        }
+    }
+
 }
 

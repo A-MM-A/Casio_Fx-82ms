@@ -2,13 +2,16 @@ package com.example.calculator
 
 import java.math.BigDecimal
 import java.math.MathContext
+import kotlin.math.asin
 import java.util.*
+import kotlin.math.acos
 import kotlin.math.cos
 import kotlin.math.ln
 import kotlin.math.log10
 import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.math.tan
+
 
 class CalculatorEngine {
 
@@ -34,9 +37,13 @@ class CalculatorEngine {
     var isDegree: Boolean = true
 
     // Append a button’s text (e.g. “7”, “+”, “sin(”)
+
     fun append(text: String) {
-        inputText += text
+        // Replace unicode superscripts with standard operators
+        val normalized = text.replace("²", "^2").replace("³", "^3")
+        inputText += normalized
     }
+
 
     // Delete last character
     fun deleteLast() {
@@ -87,9 +94,14 @@ class CalculatorEngine {
 
     // Compute the current expression and update lastAnswer
     fun evaluate(): BigDecimal {
-        val result = evalInfix(inputText)
-        lastAnswer = result
-        return result
+        return try {
+            val result = evalInfix(inputText)
+            lastAnswer = result
+            result
+        } catch (e: Exception) {
+            // on error, leave lastAnswer unchanged and return zero
+            BigDecimal.ZERO
+        }
     }
 
     // Helper to ensure lastAnswer is up-to-date before mem ops
@@ -172,9 +184,18 @@ class CalculatorEngine {
     }
 
     // Tokenization: split numbers, functions, operators, parentheses, commas
+//    private fun tokenize(expr: String): List<String> {
+//        // Simple regex-based tokenizer; expand to cover your functions/operators
+////        val regex = """(\d+(\.\d+)?)|[+\-×÷^%()]|[a-zA-Z_]+""".toRegex()
+////        val regex = """(\d+(\.\d+)?)|[+\-×÷^%()²³⁻¹]|[a-zA-Z_]+|√""".toRegex()
+//        val regex = """(\d+(\.\d+)?)|[+\-×÷^%()]|⁻¹|[²³]|[a-zA-Z_]+|√""".toRegex()
+//        return regex.findAll(expr).map { it.value }.toList()
+//    }
+
     private fun tokenize(expr: String): List<String> {
-        // Simple regex-based tokenizer; expand to cover your functions/operators
-        val regex = """(\d+(\.\d+)?)|[+\-×÷^%()]|[a-zA-Z_]+""".toRegex()
+        // Matches full function names (e.g., sin⁻¹), numbers, operators, and parentheses
+        val regex =
+            """(sin⁻¹|cos⁻¹|tan⁻¹|sin|cos|tan|log|√|²|³|⁻¹|\d+(\.\d+)?|[+\-×÷^%()])""".toRegex()
         return regex.findAll(expr).map { it.value }.toList()
     }
 
@@ -189,7 +210,7 @@ class CalculatorEngine {
 
     // Function details (add “sin”, “cos”, “log”, etc. here)
     private fun String.isFunction() = this in setOf(
-        "sin", "cos", "tan", "log", "ln", "√", "x²", "x³", "x⁻¹"
+        "sin", "cos", "tan", "log", "ln", "√", "²", "³", "⁻¹", "sin⁻¹", "cos⁻¹", "tan⁻¹"
     )
 
     private fun applyOperator(a: BigDecimal, b: BigDecimal, op: String): BigDecimal = when (op) {
@@ -205,9 +226,9 @@ class CalculatorEngine {
     private fun applyFunction(a: BigDecimal, fn: String): BigDecimal {
         return when (fn) {
             "√" -> BigDecimal(sqrt(a.toDouble()), MathContext.DECIMAL64)
-            "x²" -> a.multiply(a)
-            "x³" -> a.multiply(a).multiply(a)
-            "x⁻¹" -> BigDecimal.ONE.divide(a, MathContext.DECIMAL64)
+            "²" -> a.multiply(a)
+            "³" -> a.multiply(a).multiply(a)
+            "⁻¹" -> BigDecimal.ONE.divide(a, MathContext.DECIMAL64)
             "sin" -> {
                 val rad = if (isDegree) Math.toRadians(a.toDouble()) else a.toDouble()
                 BigDecimal(sin(rad), MathContext.DECIMAL64)
@@ -222,6 +243,43 @@ class CalculatorEngine {
                 val rad = if (isDegree) Math.toRadians(a.toDouble()) else a.toDouble()
                 BigDecimal(tan(rad), MathContext.DECIMAL64)
             }
+
+
+            "sin⁻¹" -> {
+                val value = a.toDouble()
+
+                // Check if input is in the valid domain
+                require(value in -1.0..1.0) {
+                    "Input for sin⁻¹ (arcsin) must be between -1 and 1, but was $value"
+                }
+
+                // Compute arcsin in radians
+                val rad = kotlin.math.asin(value)
+
+                // Convert to degrees if needed
+                val out = if (isDegree) Math.toDegrees(rad) else rad
+
+                // Return as BigDecimal with DECIMAL64 precision
+                BigDecimal(out, MathContext.DECIMAL64)
+            }
+
+            "cos⁻¹" -> {
+                val value = a.toDouble()
+                require(value in -1.0..1.0) {
+                    "Input for cos⁻¹ must be between -1 and 1, but was $value"
+                }
+                val rad = acos(value)
+                val out = if (isDegree) Math.toDegrees(rad) else rad
+                BigDecimal(out, MathContext.DECIMAL64)
+            }
+
+            "tan⁻¹" -> {
+                val value = a.toDouble()
+                val rad = kotlin.math.atan(value)
+                val out = if (isDegree) Math.toDegrees(rad) else rad
+                BigDecimal(out, MathContext.DECIMAL64)
+            }
+
 
             "log" -> BigDecimal(log10(a.toDouble()), MathContext.DECIMAL64)
             "ln" -> BigDecimal(ln(a.toDouble()), MathContext.DECIMAL64)
