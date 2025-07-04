@@ -123,8 +123,28 @@ class CalculatorEngine {
         val outputQueue = LinkedList<String>()
         val opStack = Stack<String>()
 
+//        // 1) Tokenize
+//        val tokens = tokenize(expr)
+
         // 1) Tokenize
-        val tokens = tokenize(expr)
+        val raw = tokenize(expr)
+        // 1a) Insert implicit parentheses for function calls without explicit ‘(…)’
+        val tokens = mutableListOf<String>()
+        var i = 0
+        while (i < raw.size) {
+            val tk = raw[i]
+            if (tk.isFunction() && i + 1 < raw.size && raw[i + 1].isNumber()) {
+                // rewrite sin 21  → sin ( 21 )
+                tokens += tk
+                tokens += "("
+                tokens += raw[i + 1]
+                tokens += ")"
+                i += 2
+            } else {
+                tokens += tk
+                i++
+            }
+        }
 
         // 2) Shunting-Yard
         for (token in tokens) {
